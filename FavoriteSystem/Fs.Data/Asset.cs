@@ -10,7 +10,25 @@
     {
 
         /// <summary>
-        /// The id of the asset
+        /// Default constructor.
+        /// </summary>
+        public SlimAsset() { }
+
+
+        /// <summary>
+        /// Constructor to create the slim for a large.
+        /// </summary>
+        /// <param name="asset"></param>
+        public SlimAsset(Asset asset)
+        {
+            this.Id = asset.Id;
+            this.Name = asset.Name;
+            this.FavoriteCount = asset.FavoriteCount;
+            this.ThumbnailUrl = asset.ThumbnailUrl;
+        }
+
+        /// <summary>
+        /// The id of the asset. 'asset|{guid}'
         /// </summary>
         [JsonProperty("id")]
         public string Id { get; set; }
@@ -39,6 +57,15 @@
     /// </summary>
     public class Asset : SlimAsset
     {
+        /// <summary>
+        /// Creates an asset id.
+        /// </summary>
+        /// <returns></returns>
+        public static string CreateId()
+        {
+            return $"asset|{Guid.NewGuid()}";
+        }
+
         /// <summary>
         /// Dummy data stuff
         /// </summary>

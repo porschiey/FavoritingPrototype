@@ -1,6 +1,7 @@
 ﻿namespace Fs.Data
 {
     using Newtonsoft.Json;
+    using System;
 
     /// <summary>
     /// Class to represent a person in the system.
@@ -10,7 +11,35 @@
     public class Person
     {
         /// <summary>
-        /// Similar to the partition key, the id is the document id of the profile. Represented as 'profile-{personId}'
+        /// Creates an id.
+        /// </summary>
+        /// <returns></returns>
+        public static string CreateId(string personId = "")
+        {
+            if (string.IsNullOrWhiteSpace(personId))
+                personId = Guid.NewGuid().ToString();
+
+            return $"profile|{personId}";
+        }
+
+        /// <summary>
+        /// Makes a personId string into a document id that can be queried
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <returns></returns>
+        public static string MakeProfileDocId(string personId)
+        {
+            if (string.IsNullOrWhiteSpace(personId))
+                return null;
+
+            if (personId.Contains("|"))
+                return personId;
+
+            return CreateId(personId);
+        }
+
+        /// <summary>
+        /// Similar to the partition key, the id is the document id of the profile. Represented as 'profile|{personId}'
         /// </summary>
         [JsonProperty("id")]
         public string Id { get; set; }
@@ -49,7 +78,22 @@
     public class AssetFavorite
     {
         /// <summary>
-        /// Similar to the partition key, the id is the document id of the profile. Represented as 'favorite-{personId}-{assetId}'
+        /// Creates an id.
+        /// </summary>
+        /// <returns></returns>
+        public static string CreateId(string assetId, string personId)
+        {
+            if (string.IsNullOrWhiteSpace(assetId))
+                throw new ArgumentNullException(nameof(assetId));
+
+            if (string.IsNullOrWhiteSpace(personId))
+                throw new ArgumentNullException(nameof(personId));
+
+            return $"asset-favorite|{assetId}|{personId}";
+        }
+
+        /// <summary>
+        /// Similar to the partition key, the id is the document id of the profile. Represented as 'asset-favorite|{assetId}|{personId}'
         /// </summary>
         [JsonProperty("id")]
         public string Id { get; set; }
